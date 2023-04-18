@@ -1,0 +1,86 @@
+{
+  "id": "4020667",
+  "name": "sspai",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2076426",
+      "name": "搜索小",
+      "font_class": "sousuoxiao",
+      "unicode": "e8d6",
+      "unicode_decimal": 59606
+    },
+    {
+      "icon_id": "356457",
+      "name": "铃铛",
+      "font_class": "lingdang",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "630094",
+      "name": "向右箭头",
+      "font_class": "xiangyoujiantou",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "630095",
+      "name": "向左箭头",
+      "font_class": "xiangzuojiantou",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "772824",
+      "name": "对话框1",
+      "font_class": "duihuakuang1",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "11372690",
+      "name": "闪电",
+      "font_class": "shandian",
+      "unicode": "e8b6",
+      "unicode_decimal": 59574
+    },
+    {
+      "icon_id": "1915203",
+      "name": "销售仪表盘",
+      "font_class": "icon-test",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "2932864",
+      "name": "星星",
+      "font_class": "xingxing",
+      "unicode": "e80d",
+      "unicode_decimal": 59405
+    },
+    {
+      "icon_id": "6263290",
+      "name": "栏目管理",
+      "font_class": "lanmuguanli",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "11993035",
+      "name": "medium-m",
+      "font_class": "medium-m",
+      "unicode": "e702",
+      "unicode_decimal": 59138
+    },
+    {
+      "icon_id": "18166279",
+      "name": "手提包,购物袋,应用商店,购物商店,手提袋",
+      "font_class": "handbag",
+      "unicode": "e8bb",
+      "unicode_decimal": 59579
+    }
+  ]
+}

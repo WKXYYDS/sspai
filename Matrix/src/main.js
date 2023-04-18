@@ -6,6 +6,10 @@ import './style.css'
 import App from './App.vue'
 // 导入路由对象
 import router from './router'
+// icon
+import './assets/icon/iconfont.css'
+// 
+import './hooks/axiosConfig'
 const app = createApp(App)
 // 注册路由
 app.use(router)
