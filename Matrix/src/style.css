@@ -5,3 +5,24 @@ body {
     font-size: 14px;
     font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Hiragino Sans GB, Microsoft YaHei, "\5FAE\8F6F\96C5\9ED1", helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, Arial, sans-serif;
 }
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+li,
+ul {
+    padding: 0;
+    margin: 0 auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    line-height: normal;
+}
+
+img {
+    vertical-align: middle;
+}

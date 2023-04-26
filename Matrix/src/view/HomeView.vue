@@ -1,111 +1,210 @@
 <script setup>
-    import { ref } from 'vue';
-    // 导入 轮播图接口
-    // import { requestScroll,requestContents } from '@/hooks/useRequest.js';
+    import { ref, watchEffect, } from 'vue';
+    import { useRouter } from 'vue-router'
+    // 导入 轮播图接口,四维图,主内容(默认推荐,最热,应用推荐,生活方式,效率技巧,少数派播客,视频,主内容(右侧 第一部分),主内容(右侧 第二部分))
+    import { requestScroll, requestFourimg, requestContents, requestHot, requestApplication, requestLife, requestEfficiency, requestBlog, requestVideo, requestRightOne, requestRightTwo, requestRightThree } from '@/hooks/useRequest.js';
+    // 导入导航栏组件
+    import Nav from '../components/Nav.vue'
     // 定义轮播图
-    // const scroll = ref([]);
-    // requestScroll().then(res => {
-    //     scroll.value = res
-    //     console.log(res);
-    // });
+    const scroll = ref([]);
+    requestScroll().then(res => {
+        scroll.value = res.data.data
+    })
+    // 定义 四维图
+    const fourImg = ref([])
+    requestFourimg().then(res => {
+        fourImg.value = res.data.data
+        // console.log(res.data.data);
+    })
+    // 定义 主内容数据
+    const page = ref(0)
+    const contents = ref([])
+    requestContents().then(res => {
+        contents.value = res.data.data
+        // console.log(res.data.data);
+    })
+    // 控制tabber 当前是哪个分类,顺便修改数据
+    const nums = ref(1)
+    const num = (value) => {
+        nums.value = value
+        if (value == 1) {
+            requestContents().then(res => {
+                contents.value = res.data.data
+                console.log(res.data.data);
+            })
+        } else if (value == 2) {
+            requestHot({
+                tag: '热门文章'
+            }).then(res => {
+                contents.value = res.data.data
+            })
+        } else if (value == 3) {
+            requestApplication({
+                tag: '应用推荐'
+            }).then(res => {
+                contents.value = res.data.data
+            })
+        } else if (value == 4) {
+            requestLife({
+                tag: '生活方式'
+            }).then(res => {
+                contents.value = res.data.data
+            })
+        } else if (value == 5) {
+            requestEfficiency({
+                tag: '效率技巧'
+            }).then(res => {
+                contents.value = res.data.data
+            })
+        } else if (value == 6) {
+            requestBlog({
+                tag: '少数派播客'
+            }).then(res => {
+                contents.value = res.data.data
+            })
+        } else if (value == 7) {
+            requestVideo({
+                post_type: 2
+            }).then(res => {
+                contents.value = res.data.data
+            })
+        }
+    }
+    // 触底加载
+    // 定义一个 当前窗口高度 的变量
+    const Top = ref(0)
+    const REQUIRE = ref(true)
+    const scrollBottom = () => {
+        Top.value = document.documentElement.scrollTop
+        if (!REQUIRE.value) return
+        if (nums.value == 1) {
+            if ((document.documentElement.clientHeight + document.documentElement.scrollTop) >= document.documentElement.offsetHeight) {
+                REQUIRE.value = false;
+                page.value = page.value + 10
+                requestContents({
+                    limit: 10,
+                    offset: page.value
+                }).then(res => {
+                    contents.value = contents.value.concat(res.data.data)
+                    REQUIRE.value = true;
+                })
+            }
+        } else if (nums.value == 2) {
+            if ((document.documentElement.clientHeight + document.documentElement.scrollTop) >= document.documentElement.offsetHeight) {
+                REQUIRE.value = false;
+                page.value = page.value + 10
+                requestHot({
+                    limit: 10,
+                    offset: page.value,
+                    tag: '热门文章'
+                }).then(res => {
+                    contents.value = contents.value.concat(res.data.data)
+                    REQUIRE.value = true;
+                })
+            }
+        } else if (nums.value == 3) {
+            if ((document.documentElement.clientHeight + document.documentElement.scrollTop) >= document.documentElement.offsetHeight) {
+                REQUIRE.value = false;
+                page.value = page.value + 10
+                requestApplication({
+                    limit: 10,
+                    offset: page.value,
+                    tag: '应用推荐'
+                }).then(res => {
+                    contents.value = contents.value.concat(res.data.data)
+                    REQUIRE.value = true;
+                })
+            }
+        } else if (nums.value == 4) {
+            if ((document.documentElement.clientHeight + document.documentElement.scrollTop) >= document.documentElement.offsetHeight) {
+                REQUIRE.value = false;
+                page.value = page.value + 10
+                requestLife({
+                    limit: 10,
+                    offset: page.value,
+                    tag: '生活方式'
+                }).then(res => {
+                    contents.value = contents.value.concat(res.data.data)
+                    REQUIRE.value = true;
+                })
+            }
+        } else if (nums.value == 5) {
+            if ((document.documentElement.clientHeight + document.documentElement.scrollTop) >= document.documentElement.offsetHeight) {
+                REQUIRE.value = false;
+                page.value = page.value + 10
+                requestEfficiency({
+                    limit: 10,
+                    offset: page.value,
+                    tag: '效率技巧'
+                }).then(res => {
+                    contents.value = contents.value.concat(res.data.data)
+                    REQUIRE.value = true;
+                })
+            }
+        } else if (nums.value == 6) {
+            if ((document.documentElement.clientHeight + document.documentElement.scrollTop) >= document.documentElement.offsetHeight) {
+                REQUIRE.value = false;
+                page.value = page.value + 10
+                requestBlog({
+                    limit: 10,
+                    offset: page.value,
+                    tag: '少数派播客'
+                }).then(res => {
+                    contents.value = contents.value.concat(res.data.data)
+                    REQUIRE.value = true;
+                })
+            }
+        } else if (nums.value == 7) {
+            if ((document.documentElement.clientHeight + document.documentElement.scrollTop) >= document.documentElement.offsetHeight) {
+                REQUIRE.value = false;
+                page.value = page.value + 10
+                requestVideo({
+                    limit: 10,
+                    offset: page.value
+                }).then(res => {
+                    contents.value = contents.value.concat(res.data.data)
+                    REQUIRE.value = true;
+                })
+            }
+        }
+    }
+    window.addEventListener('scroll', scrollBottom)
+    // 主内容(右侧 第一部分)
+    const RightOne = ref([])
+    requestRightOne().then(res => {
+        // console.log(res.data.data);
+        RightOne.value = res.data.data
+    })
+    // 主内容(右侧 第二部分)
+    const RightTwo = ref([])
+    requestRightTwo().then(res => {
+        // console.log(res.data.data);
+        RightTwo.value = res.data.data
+    })
+    // 主内容(右侧 第三部分)
+    const RightThree = ref([])
+    requestRightThree().then(res => {
+        console.log(res.data.data);
+        RightThree.value = res.data.data
+    })
+    // 点击主内容 跳转 二级页面
+    const router = useRouter()
+    // 点击事件(主内容)
+    const route = () => {
+        console.log("1231");
+        router.push({
+            path: '/details',
+            query: {
+                id: '123'
+            }
+        })
+    }
 </script>
 
 <template>
     <div class="Home-box">
         <!-- 首页导航栏 -->
-        <div class="Home-nav">
-            <div class="ss-header-container">
-                <div class="ss-header_wrapper">
-                    <!-- 左 logo -->
-                    <div class="ss-header_left">
-                        <a href="#" class="ss-header_home">
-                            <i class="logo-sspai"></i>
-                        </a>
-                    </div>
-                    <!-- 中间 -->
-                    <div class="ss-header_center">
-                        <div class="ss-header_menu-wrapper">
-                            <!-- 循环 -->
-                            <div class="menu noneOne">
-                                <div class="menu-inner">
-                                    <i class="iconfont icon-medium-m" style="color: aliceblue;"></i>
-                                    <span class="label">Matrix</span>
-                                </div>
-                                <div class="none">
-                                    <div class="submenu-wrapper">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="menu">
-                                <div class="menu-inner">
-                                    <i class="iconfont icon-lanmuguanli" style="color: aliceblue;"></i>
-                                    <span class="label">付费栏目</span>
-                                </div>
-                            </div>
-                            <div class="menu noneTwo">
-                                <div class="menu-inner">
-                                    <i class="iconfont icon-xingxing" style="color: aliceblue;"></i>
-                                    <span class="label">特别策划</span>
-                                </div>
-                            </div>
-                            <div class="menu noneThree">
-                                <div class="menu-inner">
-                                    <i class="iconfont icon-handbag" style="color: aliceblue;"></i>
-                                    <span class="label">Pi Store</span>
-                                </div>
-                            </div>
-                            <div class="menu">
-                                <div class="menu-inner">
-                                    <i class="iconfont icon-icon-test" style="color: aliceblue;"></i>
-                                    <span class="label">Tron 计划</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 右  -->
-                    <div class="ss-header_right">
-                        <!-- 会员 -->
-                        <div class="logo-prime-wrapper">
-                            <a href="#" class="logo-prime-wrapper-a">
-                                <svg data-v-c3f3faec="" width="16" height="14" viewBox="0 0 32 20" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg" class="logo-prime">
-                                    <path data-v-c3f3faec=""
-                                        d="M0.557236 2.9718C0.249483 2.9718 0 3.22129 0 3.52904V6.12947C0 6.43723 0.249483 6.68671 0.557236 6.68671H3.71478V21.7321C3.71478 22.0398 3.96426 22.2893 4.27202 22.2893H6.87245C7.1802 22.2893 7.42969 22.0398 7.42969 21.7321V6.68671H11.1445V12.6305L12.5576 21.8167C12.5994 22.0886 12.8333 22.2893 13.1083 22.2893H15.6956C16.0372 22.2893 16.2983 21.9848 16.2464 21.6473L14.8594 12.6306V6.68671H18.0173C18.3251 6.68671 18.5745 6.43723 18.5745 6.12947V3.52904C18.5745 3.22128 18.3251 2.9718 18.0173 2.9718H0.557236Z"
-                                        fill="#E5E5E5" class="path-pai"></path>
-                                    <path data-v-c3f3faec=""
-                                        d="M26.7481 0.557114C26.7481 0.249361 26.4986 -0.00012207 26.1909 -0.00012207H23.5904C23.2827 -0.00012207 23.0332 0.249361 23.0332 0.557114V2.9718H20.6178C20.31 2.9718 20.0605 3.22129 20.0605 3.52904V6.12947C20.0605 6.43723 20.31 6.68671 20.6178 6.68671H23.0332V9.1014C23.0332 9.40915 23.2827 9.65864 23.5904 9.65864H26.1909C26.4986 9.65864 26.7481 9.40915 26.7481 9.1014V6.68671H29.1621C29.4698 6.68671 29.7193 6.43723 29.7193 6.12947V3.52904C29.7193 3.22128 29.4698 2.9718 29.1621 2.9718H26.7481V0.557114Z"
-                                        fill="#E5E5E5" class="path-plus"></path>
-                                </svg>
-                                <span>会员</span>
-                            </a>
-                        </div>
-                        <!-- 搜索 -->
-                        <div class="ss-header_search">
-                            <div class="ss-header_search_wrapper">
-                                <div class="ss-header_btn-search">
-                                    <i class="iconfont icon-sousuoxiao" style="font-size: 20px;"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 铃:登陆后才有的 -->
-                        <!-- <div class="ss-header_search">
-                            <div class="ss-header_search_wrapper">
-                                <div class="ss-header_btn-search">
-                                    <i class="iconfont icon-lingdang" style="font-size: 20px;"></i>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- 登录&头像 -->
-                        <div class="ss-header_person">
-                            <button class="ss-header_btn-login">
-                                <span>登录</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Nav></Nav>
         <!-- 主页内容 -->
         <div class="home-page">
             <!-- 轮播 -->
@@ -113,10 +212,292 @@
                 <div class="el-carousel">
                     <div class="el-carousel__container" style="height: 367.479px; position: relative;">
                         <el-carousel height="367px">
-                            <el-carousel-item v-for="item in 4" :key="item">
-                                <h3 class="small justify-center" text="2xl">{{ item }}</h3>
+                            <el-carousel-item v-for="(item,index) in scroll" :key="item.id">
+                                <el-image style="width: 100%; height: 100%"
+                                    :src=" 'https://cdn.sspai.com/' + item.image + '?imageMogr2/auto-orient/quality/95/thumbnail/!2880x620r/gravity/Center/crop/2880x620/interlace/1'"
+                                    fit="cover" />
                             </el-carousel-item>
                         </el-carousel>
+                    </div>
+                </div>
+            </div>
+            <!-- 轮播之下四纬图 -->
+            <div class="minor-banner-box">
+                <div class="minor-banner">
+                    <ul>
+                        <li class="minor-item" v-for="item in fourImg" :key="item.id">
+                            <a href="#">
+                                <img :src="'https://cdn.sspai.com/' + item.image + '?imageMogr2/auto-orient/quality/95/thumbnail/!528x288r/gravity/Center/crop/528x288/interlace/1'"
+                                    alt="">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 推荐等内容 -->
+            <div class="contain-box">
+                <!-- 正文 -->
+                <div class="contain_content">
+                    <!-- 推荐等目录 -->
+                    <div class="home_tabs_wrapper">
+                        <div class="swiper-container">
+                            <ul class="swiper-wrapper">
+                                <li :class="nums == 1 ? 'tabs-item swiper-slide active' : 'tabs-item swiper-slide' "
+                                    @click="num(1)">推荐</li>
+                                <li :class="nums == 2 ? 'tabs-item swiper-slide active' : 'tabs-item swiper-slide' "
+                                    @click="num(2)">最热</li>
+                                <li :class="nums == 3 ? 'tabs-item swiper-slide active' : 'tabs-item swiper-slide' "
+                                    @click="num(3)">应用推荐</li>
+                                <li :class="nums == 4 ? 'tabs-item swiper-slide active' : 'tabs-item swiper-slide' "
+                                    @click="num(4)">生活方式</li>
+                                <li :class="nums == 5 ? 'tabs-item swiper-slide active' : 'tabs-item swiper-slide' "
+                                    @click="num(5)">效率技巧</li>
+                                <li :class="nums == 6 ? 'tabs-item swiper-slide active' : 'tabs-item swiper-slide' "
+                                    @click="num(6)">博客</li>
+                                <li :class="nums == 7 ? 'tabs-item swiper-slide active' : 'tabs-item swiper-slide' "
+                                    @click="num(7)">视频</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 内容 -->
+                    <div class="articleCard_content">
+                        <div class="articleCard-box">
+                            <!-- 循环 -->
+                            <div v-for="item in contents" :key="item.id">
+                                <div class="articleCard" v-if="item.morning_paper_title.length == 0" @click="route">
+                                    <!-- 普通 -->
+                                    <div class="advertisementCardBox">
+                                        <!-- 左 -->
+                                        <div class="img_box">
+                                            <a href="#">
+                                                <img class="card_img"
+                                                    :src="'https://cdn.sspai.com/' + item.banner + '?imageMogr2/auto-orient/quality/95/thumbnail/!800x400r/gravity/Center/crop/800x400/interlace/1'"
+                                                    alt="">
+                                            </a>
+                                            <a class="corner" href="#">
+                                                <img class="corner_img" :src="item.corner.icon" alt="">
+                                            </a>
+                                        </div>
+                                        <!-- 右 -->
+                                        <div class="card_content">
+                                            <a href="#" class="pc_card">
+                                                <div class="title text_ellipsis2">
+                                                    {{item.title}}
+                                                </div>
+                                            </a>
+                                            <div class="txt text_ellipsis3">
+                                                如今 3DS 已经不是用「游戏机」这种简单词汇就能形容的物品，它承载了太多人的回忆。
+                                            </div>
+                                            <div class="card_bottom pc_card">
+                                                <div class="left">
+                                                    <div class="pic_box">
+                                                        <a href="#">
+                                                            <img class="header"
+                                                                :src="'https://cdn.sspai.com/' + item.author.avatar + '?imageMogr2/auto-orient/quality/95/thumbnail/!800x400r/gravity/Center/crop/800x400/interlace/1'"
+                                                                alt="">
+                                                        </a>
+                                                        <a href="#">
+                                                            <span class="name">
+                                                                {{item.author.nickname}}
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="pic_box time">
+                                                        <span>24 分钟前</span>
+                                                    </div>
+                                                </div>
+                                                <div class="right">
+                                                    <div class="pic_box">
+                                                        <i class="iconfont icon-shandian" style="font-size: 18px;"></i>
+                                                        <span class="name">{{item.like_count}}</span>
+                                                    </div>
+                                                    <div class="pic_box">
+                                                        <i class="iconfont icon-duihuakuang1"
+                                                            style="font-size: 18px;"></i>
+                                                        <span class="name">{{item.comment_count}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 大块头 -->
+                                <div class="pai articleCard home pc" v-if="item.morning_paper_title.length">
+                                    <!-- 上 -->
+                                    <div class="pai_title">
+                                        <a href="#">
+                                            <div class="title">
+                                                {{item.corner.name}}
+                                            </div>
+                                        </a>
+                                        <div class="time">
+                                            <div>
+                                                二〇二三年四月二十四日
+                                            </div>
+                                            <div>
+                                                星期一
+                                            </div>
+                                        </div>
+                                        <div class="link">
+                                            <a href="#">
+                                                阅读全篇早报&gt;
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- 下 -->
+                                    <div class="pai_content">
+                                        <div class="img_box pai_img_box">
+                                            <a href="#">
+                                                <img class="card_img"
+                                                    :src="'https://cdn.sspai.com/' + item.banner + '?imageMogr2/auto-orient/quality/95/thumbnail/!456x456r/gravity/Center/crop/456x456/interlace/1'"
+                                                    alt="">
+                                            </a>
+                                        </div>
+                                        <div class="pai_card_content">
+                                            <!-- 循环 -->
+                                            <div class="pai_abstract" v-for="(items,index) in item.morning_paper_title"
+                                                :key="items.index">
+                                                <div class="index">0{{index + 1}}</div>
+                                                <a href="#">
+                                                    <div class="content text_ellipsis2">
+                                                        {{items}}
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 右侧 -->
+                <div class="indexRight">
+                    <div>
+                        <!-- 第一部分 -->
+                        <div>
+                            <!-- 循环 -->
+                            <a href="#" class="home-sidebar-hot" v-for="item in RightOne" :key="item.id">
+                                <img class="right_top_img"
+                                    :src="'https://cdn.sspai.com/' + item.image + '?imageMogr2/auto-orient/quality/95/thumbnail/!548x264r/gravity/Center/crop/548x264/interlace/1'"
+                                    alt="">
+                            </a>
+                        </div>
+                        <!-- 第二部分 -->
+                        <div class="yipai-container">
+                            <i class="yipai-logo"></i>
+                            <ul class="yipai-list">
+                                <!-- 循环 -->
+                                <li class="yipai-item" v-for="item in RightTwo" :key="item.banner_id">
+                                    <a href="#" class="bullet">
+                                        <div class="bullet-info">
+                                            <div class="bullet-title">
+                                                {{item.title}}
+                                            </div>
+                                            <div class="bullet-bottom">
+                                                <i class="iconfont icon-yuyin" style="font-size: 15px;"></i>
+                                                <span class="bullet-vol">讨论 VOL.{{item.vol}}</span>
+                                            </div>
+                                        </div>
+                                        <img class="bullet-banner"
+                                            :src="'https://cdn.sspai.com/' + item.banner + '?imageMogr2/auto-orient/quality/95/thumbnail/!126x88r/gravity/Center/crop/126x88/interlace/1'"
+                                            alt="">
+                                    </a>
+                                </li>
+                            </ul>
+                            <a href="#" class="btn-more">
+                                <span>查看全部</span>
+                                <i class="iconfont icon-xiangyoujiantou" style="font-size: 12px;"></i>
+                            </a>
+                        </div>
+                        <!-- 第三部分 -->
+                        <div class="sticky-wrapper">
+                            <div :class="Top >= 1900 ? 'sot' : '' ">
+                                <!-- 上 -->
+                                <div class="right_item">
+                                    <div class="item_sign">
+                                        <img class="sign_img" src="../assets/3.png" alt="">
+                                        <span class="sign_txt">
+                                            Matrix
+                                            <span class="small">精选</span>
+                                        </span>
+                                    </div>
+                                    <ul class="item_ul">
+                                        <!-- 循环 -->
+                                        <li class="item_li" v-for="item in RightThree" :key="item.id">
+                                            <a href="#" class="list-item-a">
+                                                <div class="item-title">
+                                                    {{item.title}}
+                                                </div>
+                                                <a>
+                                                    <img class="avatar header_img"
+                                                        :src="'https://cdn.sspai.com/' + item.author.avatar + '?imageMogr2/auto-orient/quality/95/thumbnail/!64x64r/gravity/Center/crop/64x64'"
+                                                        alt="">
+                                                    <span class="nickname">{{item.author.nickname}}</span>
+                                                </a>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="#" class="btn-more">
+                                        <span>查看全部</span>
+                                        <i class="iconfont icon-xiangyoujiantou" style="font-size: 12px;"></i>
+                                    </a>
+                                </div>
+                                <!-- 下 -->
+                                <div class="right_bottom phone">
+                                    <!-- 上 -->
+                                    <div class="icon_box">
+                                        <a href="#" class="social-item">
+                                            <i class="iconfont icon-xinlangweibo" style="font-size: 18px;"></i>
+                                        </a>
+                                        <span>
+                                            <span class="social-item">
+                                                <i class="iconfont icon-weixin" style="font-size: 18px;"></i>
+                                            </span>
+                                        </span>
+                                        <a href="#" class="social-item">
+                                            <i class="iconfont icon-yuyin" style="font-size: 18px;"></i>
+                                        </a>
+                                    </div>
+                                    <!-- 中 -->
+                                    <div class="link_box">
+                                        <div class="link_ul">
+                                            <div class="link_li">
+                                                <a href="#">关于我们</a>
+                                            </div>
+                                            <div class="link_li">
+                                                <a href="#">商务合作</a>
+                                            </div>
+                                            <div class="link_li">
+                                                <a href="#">联系我们</a>
+                                            </div>
+                                        </div>
+                                        <div class="link_ul">
+                                            <div class="link_li">
+                                                <a href="#">成为作者</a>
+                                            </div>
+                                            <div class="link_li">
+                                                <a href="#">常见问题</a>
+                                            </div>
+                                        </div>
+                                        <div class="link_ul">
+                                            <div class="link_li">
+                                                <a href="#">用户协议</a>
+                                            </div>
+                                            <div class="link_li">
+                                                <a href="#">客户端</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 下 -->
+                                    <div class="ssp_text">
+                                        <span>© 2013-2023 少数派</span>
+                                        <a href="#">粤ICP备09128966号-4</a>
+                                        <a href="#">粤B2-20211534</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -124,218 +505,35 @@
     </div>
 </template>
 
-<style scoped>
+<style>
     button {
-        border: none;
-        background: none;
         padding: 0;
+        border: none;
         cursor: pointer;
         transition: .2s;
+        background: none;
+    }
+
+    .iconfont {
+        line-height: 1;
+        font-size: 2em;
+        font-weight: 400;
+        margin-right: 4px;
+        font-style: normal;
+        font-variant: normal;
+        text-transform: none;
+        display: inline-block;
+        vertical-align: middle;
+        font-family: iconfont !important;
     }
 
     /* 最大的box */
     .Home-box {
         padding-top: 60px;
+        background-color: #f4f4f4;
     }
 
-    /* 首页导航栏 */
-    .Home-nav {
-        z-index: 100;
-        background: #232222;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        transition: background .2s;
-    }
 
-    .ss-header-container {
-        max-width: 1560px;
-        margin: auto;
-        height: 60px;
-        position: relative;
-        padding: 0 12px;
-    }
-
-    .ss-header_wrapper {
-        position: relative;
-        display: flex;
-        -webkit-box-pack: justify;
-        justify-content: space-between;
-        -webkit-box-align: center;
-        align-items: center;
-        height: 100%;
-    }
-
-    /* 左 */
-    .ss-header_left {
-        position: absolute;
-        left: 0;
-        height: 100%;
-    }
-
-    .ss-header_home {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        -webkit-box-align: center;
-        align-items: center;
-    }
-
-    .logo-sspai {
-        width: 100px;
-        display: inline-block;
-        background-size: contain;
-        background-position: 50%;
-        background-image: url(../assets/1.png);
-    }
-
-    .logo-sspai::before {
-        content: "";
-        display: block;
-        padding-top: 35.77235772357724%;
-    }
-
-    /* 中间 */
-    .ss-header_center {
-        margin: auto;
-        color: aliceblue;
-    }
-
-    .menu {
-        display: inline-block;
-        padding: 0 15px;
-        height: 60px;
-        align-items: center;
-        -webkit-box-align: center;
-        line-height: 60px;
-        position: relative;
-    }
-
-    .menu:hover {
-        background-color: #3a3838;
-    }
-
-    .none { 
-        position: absolute; 
-        top: 60px;
-        left: -125px;
-        background-color: #3a3838;
-        -webkit-transition: all .25s;
-        display: flex;
-        z-index: 299;
-        height: 220px;
-        display: none;
-        transition: display 1s;
-    }
-
-    .noneOne:hover .none {
-        display: block;
-        transition: display 1s;
-    }
-
-    .menu-inner {
-        font-size: 12px;
-    }
-
-    .iconfont {
-        font-size: 2em;
-        display: inline-block;
-        margin-right: 4px;
-        font-family: iconfont !important;
-        font-style: normal;
-        font-weight: 400;
-        font-variant: normal;
-        text-transform: none;
-        line-height: 1;
-        vertical-align: middle;
-    }
-
-    .label {
-        display: inline-block;
-        font-size: 1em;
-        font-weight: 600;
-        letter-spacing: .05em;
-        text-align: center;
-        vertical-align: middle;
-        transition: color .2s;
-    }
-
-    /* 右 */
-    /* 会员 */
-    .ss-header_right {
-        display: flex;
-        position: absolute;
-        right: 0;
-        height: 100%;
-        align-items: center;
-        -webkit-box-align: center;
-    }
-
-    .logo-prime-wrapper {
-        --height: 30px;
-        display: inline-block;
-        position: relative;
-        height: 25px;
-        border-radius: 30px;
-        margin: 0 8px;
-    }
-
-    .logo-prime-wrapper-a {
-        padding: 8px 12px;
-        background: #373737;
-        border-radius: 30px;
-    }
-
-    .logo-prime-wrapper-a>span {
-        color: #e5e5e5;
-        font-size: 12px;
-        font-weight: 600;
-        margin-left: 4px;
-    }
-
-    .logo-prime {
-        display: inline-block;
-        vertical-align: middle;
-
-    }
-
-    .path-pai {
-        transition: .7s;
-    }
-
-    /* 搜索&铃 */
-    .ss-header_btn-search {
-        color: #e5e5e5;
-        margin: 0 8px;
-        height: 60px;
-        line-height: 55px;
-    }
-
-    /* 登录&头像 */
-    .ss-header_person {
-        margin-right: 10px;
-        transition: max-width .2s;
-        max-width: 60px;
-        height: 100%;
-        display: flex;
-        -webkit-box-align: center;
-        align-items: center;
-    }
-
-    .ss-header_btn-login {
-        font-size: 1rem;
-        font-weight: 500;
-        width: 50px;
-        height: 30px;
-        padding: 5px 10px;
-        margin-right: 0;
-        margin-left: 10px;
-        color: #655e5e;
-        background: #e5e5e5;
-        border-radius: 30px;
-        white-space: nowrap;
-    }
 
     /* 主页内容 */
     .home-page {
@@ -345,19 +543,19 @@
 
     /* 轮播 */
     .el-carousel {
-        transition: all .5s;
         width: 100%;
+        color: #fff;
+        margin: 0 auto;
         overflow-x: hidden;
         position: relative;
-        margin: 0 auto;
-        color: #fff;
+        transition: all .5s;
     }
 
     .el-carousel__item h3 {
-        color: #475669;
-        opacity: 0.75;
-        line-height: 150px;
         margin: 0;
+        opacity: 0.75;
+        color: #475669;
+        line-height: 150px;
         text-align: center;
     }
 
@@ -367,5 +565,689 @@
 
     .el-carousel__item:nth-child(2n + 1) {
         background-color: #d3dce6;
+    }
+
+    /* 四纬图 */
+    .minor-banner-box {
+        z-index: 5;
+        margin-top: -40px;
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .minor-banner {
+        padding: 0;
+        z-index: 1;
+        width: 100%;
+        margin: 0 auto;
+        overflow: hidden;
+        list-style: none;
+        max-width: 1120px;
+        position: relative;
+    }
+
+    .minor-banner ul {
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        width: 1120px;
+        position: relative;
+        transform: translate3d(0px, 0px, 0px);
+        transition-property: transform, -webkit-transform;
+    }
+
+    .minor-item {
+        width: 264px;
+        height: 144px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 6px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        display: inline-block;
+        transform: rotate(0deg);
+        box-shadow: 0 4px 4px rgba(0, 0, 0, .15);
+    }
+
+    .minor-item a {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .minor-banner img {
+        width: 100%;
+        height: 100%;
+        transition: all .5s;
+        border-radius: 6px;
+    }
+
+    .minor-banner img:hover {
+        transform: scale(1.1);
+    }
+
+    /* 推荐等内容 */
+    .contain-box {
+        margin-top: -10px;
+        width: 100%;
+        max-width: 1120px;
+        display: flex;
+        margin: 0 auto;
+    }
+
+    .contain_content {
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    .home_tabs_wrapper {
+        height: 48px;
+    }
+
+    .swiper-container {
+        transition: .2s;
+        background: #f4f4f4;
+        z-index: 9;
+        width: 100% !important;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        overflow: hidden;
+        list-style: none;
+        padding: 0;
+    }
+
+    .swiper-wrapper {
+        width: 592px;
+        display: flex;
+        margin-left: 0;
+        transform: translate3d(0px, 0, 0);
+        position: relative;
+        height: 100%;
+        z-index: 1;
+    }
+
+    /* 推荐内容的tabber */
+    .tabs-item {
+        padding: 0 14px;
+        width: auto;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all .1s;
+        margin: 0;
+        margin-right: 10px;
+        height: 48px;
+        box-sizing: border-box;
+        line-height: 48px;
+        white-space: nowrap;
+    }
+
+    .swiper-slide {
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    .active {
+        color: #d71a1b;
+        font-weight: 500;
+        border-bottom: 2px solid #d71a1b;
+    }
+
+    /* 内容 */
+    .articleCard-box {
+        margin-top: 20px;
+    }
+
+    .articleCard {
+        margin-bottom: 15px;
+    }
+
+    .advertisementCardBox {
+        user-select: none;
+        max-width: 800px;
+        display: flex;
+        background: #fff;
+        width: 100%;
+    }
+
+    .advertisementCardBox a {
+        color: #292525;
+    }
+
+    .advertisementCardBox:hover .img_box {
+        cursor: pointer;
+        width: 390px;
+    }
+
+    .advertisementCardBox:hover .img_box::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, .1);
+        pointer-events: none;
+    }
+
+    /* 左 */
+    .advertisementCardBox .img_box {
+        width: 50%;
+        padding-top: 25%;
+        overflow: hidden;
+        position: relative;
+        transition: all .2s ease-out;
+        backface-visibility: hidden;
+        background: linear-gradient(180deg, transparent, #000);
+    }
+
+    .advertisementCardBox .card_img {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 100%;
+        width: auto;
+        height: 100%;
+        transition: width .2s ease-out, height .2s ease-out;
+    }
+
+    .corner {
+        position: absolute;
+        left: 13px;
+        top: 10px;
+    }
+
+    .corner_img {
+        width: auto;
+        height: 24px;
+    }
+
+    /* 右 */
+    .card_content {
+        width: 50%;
+        padding: 30px;
+        box-sizing: border-box;
+        transition: all .2s ease-out;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        flex-direction: column;
+    }
+
+    .pc_card {
+        display: flex;
+        margin: auto 0;
+    }
+
+    .advertisementCardBox .title {
+        color: #292525;
+        font-weight: 600;
+        font-size: 20px;
+        height: 57px;
+        margin-bottom: 20px;
+        line-height: 1.4;
+        text-align: left;
+    }
+
+    .text_ellipsis2,
+    .text_ellipsis3 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .txt {
+        color: #655e5e;
+        margin-bottom: 20px;
+    }
+
+    .card_bottom {
+        color: #655e5e;
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+    }
+
+    .pc_card {
+        margin: auto 0;
+    }
+
+    .left {
+        display: flex;
+    }
+
+    .left .pic_box {
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+    .pic_box {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        color: #8e8787;
+    }
+
+    .header {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .name {
+        display: flex;
+        max-width: 90px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .right {
+        display: flex;
+    }
+
+    .right .pic_box {
+        margin-left: 20px;
+    }
+
+    /* 大块头 */
+    .pai {
+        background: #fff;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        flex-flow: column;
+        max-width: 800px;
+        width: 100%;
+        display: flex;
+    }
+
+    .pai_title {
+        height: 81px;
+        margin: 31px 31px 0 34px;
+        border-top: 1px solid #e5e5e5;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .pai .title {
+        float: left;
+        width: 31%;
+        margin-top: 10px;
+        height: 45px;
+        font-size: 32px;
+        line-height: 45px;
+        letter-spacing: .1em;
+        color: #292525;
+        font-weight: 500;
+    }
+
+    .pai .time {
+        float: left;
+        height: 65px;
+        margin-top: 15px;
+        padding-left: 20px;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: .05em;
+        color: #655e5e;
+    }
+
+    .link {
+        float: right;
+        margin-top: 15px;
+        height: 65px;
+    }
+
+    .link a {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 24px;
+        letter-spacing: .1em;
+        color: #fd281a;
+    }
+
+    /* 下 */
+    .pai .pai_content {
+        padding: 30px;
+        height: 100%;
+        display: flex;
+    }
+
+    .pai .img_box {
+        transition: all .2s ease-out;
+        backface-visibility: hidden;
+        background: linear-gradient(102.13deg, #ededed 5.23%, #e0e0e0 91.38%);
+        width: 31%;
+        padding-top: 31%;
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .pai .img_box .card_img {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .pai .pai_card_content {
+        display: inline-flex;
+        box-sizing: border-box;
+        width: 70%;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        flex-flow: row;
+        flex-wrap: wrap;
+        padding: 0 0 0 20px;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+    }
+
+    .pai .pai_abstract {
+        width: 47%;
+        display: inline-flex;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+    .pai .index {
+        font-size: 20px;
+        line-height: 28px;
+        color: #d71a1b;
+        font-weight: 600;
+    }
+
+    .pai .content {
+        margin-left: 16px;
+        font-size: 16px;
+        line-height: 22px;
+        color: #292525;
+    }
+
+    .pai .content:hover {
+        text-decoration: underline;
+    }
+
+    /* 主内容 右侧 */
+    .indexRight {
+        width: 274px;
+        position: relative;
+        margin-top: 67px;
+    }
+
+    /* 第一部分 */
+    .home-sidebar-hot {
+        display: block;
+        margin-top: 32px;
+        cursor: pointer;
+    }
+
+    .home-sidebar-hot:first-child {
+        margin-top: 0;
+    }
+
+    .right_top_img {
+        width: 274px;
+        height: 132px;
+        border-radius: 2px;
+    }
+
+    /* 第二部分 */
+    .yipai-container {
+        background: #fff;
+        padding: 24px 24px 0;
+        margin-top: 32px;
+    }
+
+    .yipai-container .yipai-logo {
+        display: block;
+        width: 90px;
+        height: 40px;
+        background: url(../assets/2.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .yipai-container .yipai-list {
+        margin-top: 4px;
+    }
+
+    .yipai-container .yipai-item {
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .yipai-container .bullet {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        padding: 20px 0;
+        color: #292525;
+    }
+
+    .yipai-container .bullet-info {
+        margin-right: 16px;
+    }
+
+    .yipai-container .bullet-title {
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 8px;
+    }
+
+    .yipai-container .bullet-bottom .bullet-vol {
+        color: #655e5e;
+        font-size: 12px;
+        line-height: 20px;
+        font-weight: 700;
+        vertical-align: middle;
+    }
+
+    .yipai-container .bullet-banner {
+        width: 63px;
+        height: 44px;
+        border-radius: 4px;
+    }
+
+    .yipai-container .btn-more {
+        display: block;
+        cursor: pointer;
+        padding: 16px 0;
+        line-height: 20px;
+        color: #8e8787;
+    }
+
+    .yipai-container .btn-more span {
+        vertical-align: middle;
+    }
+
+    /* 第三部分 */
+    .sot {
+        width: 274px;
+        position: fixed;
+        top: 60px;
+        left: 1139.33px;
+        bottom: auto;
+    }
+
+    /* 上 */
+    .sticky-wrapper .right_item {
+        margin-top: 24px;
+        background: #fff;
+        padding: 24px 24px 0;
+    }
+
+    .sticky-wrapper .item_sign {
+        background: #fff;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+    .sticky-wrapper .sign_img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .sticky-wrapper .sign_txt {
+        font-size: 18px;
+        line-height: 25px;
+        color: #292525;
+        margin-left: 8px;
+        font-weight: 500;
+    }
+
+    .sticky-wrapper .small {
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .sticky-wrapper .item_ul {
+        margin-top: 4px;
+    }
+
+    .sticky-wrapper .item_li {
+        display: flex;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .sticky-wrapper .list-item-a {
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        color: #292525;
+        padding: 20px 0;
+    }
+
+    .sticky-wrapper .item-title {
+        margin-bottom: 12px;
+    }
+
+    .sticky-wrapper .header_img {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+    }
+
+    .sticky-wrapper .nickname {
+        color: #655e5e;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    .sticky-wrapper .btn-more {
+        display: block;
+        cursor: pointer;
+        padding: 16px 0;
+        line-height: 20px;
+        color: #8e8787;
+    }
+
+    .sticky-wrapper .btn-more span {
+        vertical-align: middle;
+    }
+
+    /* 下 */
+    .sticky-wrapper .right_bottom {
+        border-top: 1px solid #e5e5e5;
+        margin-top: 30px;
+        padding-top: 30px;
+    }
+
+    .sticky-wrapper .icon_box {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+    }
+
+    .sticky-wrapper .social-item {
+        display: inline-flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        width: 34px;
+        height: 34px;
+        background: #fff;
+        border-radius: 50%;
+        color: #8e8787;
+        transition: .2s;
+    }
+
+    .sticky-wrapper .link_box {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .sticky-wrapper .link_li {
+        margin-bottom: 10px;
+        width: 50px;
+        text-align: center;
+    }
+
+    .sticky-wrapper .link_li a {
+        color: #8e8787;
+        font-size: 12px;
+    }
+
+    .sticky-wrapper .ssp_text {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #c1bdbd;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        flex-direction: column;
+    }
+
+    .sticky-wrapper .ssp_text span {
+        margin-bottom: 8px;
+    }
+
+    .sticky-wrapper .ssp_text a {
+        font-size: 12px;
+        color: #c1bdbd;
+        margin-bottom: 8px;
+    }
+
+    /* 修改组件中的样式 */
+    .el-carousel__indicator--horizontal .el-carousel__button {
+        width: 10px;
+        height: 10px;
+        opacity: 0.8;
+        border-radius: 4px;
+        border: none !important;
+        border: 1px solid #ffffff;
+        background: rgba(78, 78, 78, 0.3);
+    }
+
+    .el-carousel__indicator--horizontal.is-active .el-carousel__button {
+        opacity: 1;
+        width: 10px;
+        height: 10px;
+        background: white;
+        border-radius: 20px;
+        border: none !important;
+    }
+
+    .el-carousel__indicator--horizontal .el-carousel__button {
+        border-radius: 20px !important;
+    }
+
+    .el-carousel__indicators--horizontal {
+        margin: 0 auto;
+    }
+
+    .el-carousel__indicators--horizontal {
+        bottom: 50px !important;
     }
 </style>

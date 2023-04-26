@@ -10,6 +10,12 @@ const router = createRouter({
       component: () => import('../view/HomeView.vue')
     },
     {
+      path: '/details',
+      name: 'details',
+      // 异步加载
+      component: () => import('../view/DetailsView.vue')
+    },
+    {
       path: '/',
       redirect: "/home"
     }

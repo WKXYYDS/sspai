@@ -6,6 +6,132 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "2402025",
+      "name": "投票",
+      "font_class": "toupiao",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "5226203",
+      "name": "披萨",
+      "font_class": "pisa",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "7312288",
+      "name": "点赞",
+      "font_class": "dianzan",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "14975829",
+      "name": "专栏",
+      "font_class": "zhuanlan",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "34453353",
+      "name": "品质商品会场",
+      "font_class": "pinzhishangpinhuichang",
+      "unicode": "e87b",
+      "unicode_decimal": 59515
+    },
+    {
+      "icon_id": "374774",
+      "name": "开关",
+      "font_class": "kaiguan",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "577368",
+      "name": "淘宝",
+      "font_class": "taobao",
+      "unicode": "e755",
+      "unicode_decimal": 59221
+    },
+    {
+      "icon_id": "915605",
+      "name": "分类",
+      "font_class": "fenlei",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "4464106",
+      "name": "信息-圆",
+      "font_class": "xinxi-yuan",
+      "unicode": "e7cc",
+      "unicode_decimal": 59340
+    },
+    {
+      "icon_id": "5387534",
+      "name": "开关",
+      "font_class": "kaiguan1",
+      "unicode": "eaf7",
+      "unicode_decimal": 60151
+    },
+    {
+      "icon_id": "6010800",
+      "name": "新",
+      "font_class": "xin",
+      "unicode": "e945",
+      "unicode_decimal": 59717
+    },
+    {
+      "icon_id": "9524645",
+      "name": "品牌",
+      "font_class": "pinpai",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "15928130",
+      "name": "专题维护",
+      "font_class": "zhuantiweihu",
+      "unicode": "e781",
+      "unicode_decimal": 59265
+    },
+    {
+      "icon_id": "25537594",
+      "name": "树状图",
+      "font_class": "shuzhuangtu",
+      "unicode": "e7d4",
+      "unicode_decimal": 59348
+    },
+    {
+      "icon_id": "1360",
+      "name": "新浪微博",
+      "font_class": "xinlangweibo",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "77156",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "1159892",
+      "name": "wifi",
+      "font_class": "wifi",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "21828292",
+      "name": "语音",
+      "font_class": "yuyin",
+      "unicode": "e69f",
+      "unicode_decimal": 59039
+    },
+    {
       "icon_id": "2076426",
       "name": "搜索小",
       "font_class": "sousuoxiao",

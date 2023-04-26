@@ -19,26 +19,21 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  // 配置服务器代理
   server: {
-    cors: true,
     proxy: {
-      "/sspai": {
-        target: "https://sspai.com/api/v1",
+      '/sspai': {
+        target: 'https://sspai.com/api/v1', // 实际请求地址
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/sspai/, "")
-      },
+        secure: false,
+        rewrite: (path) => path.replace(/^\/sspai/, ""),
+        configure: (proxy, options) => {
+          // proxy 是 'http-proxy' 的实例
+          proxy.on("proxyReq", function (e, req, res) {
+            e.setHeader("Origin", "https://sspai.com/api/v1");
+          });
+        }
 
-    }
+      }
+    },
   },
-  // server: {
-  //   cors: true, 
-  //   proxy: {
-  //     '/sspai': { 
-  //       target: "https://sspai.com/api/v1",
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace('/sspai', '') 
-  //     }
-  //   }
-  // }
 })
