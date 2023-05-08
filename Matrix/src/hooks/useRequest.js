@@ -88,18 +88,46 @@ export const requestRightThree = function () {
 
 // 主内容 跳转 二级页面 内容
 // https://sspai.com/api/v1/article/info/get?id=79462&view=second
-
-
+export const requestConent = function (data) {
+    return Axios.get("/article/info/get", {
+        params: data
+    })
+}
 
 // 主内容 跳转 二级页面 文章末尾 联合作者
 // 	https://sspai.com/api/v1/user/like/user/page/get?limit=5&article_id=79462
-
-
+export const requestLike = function (data) {
+    return Axios.get("/user/like/user/page/get", {
+        params: data
+    })
+}
 
 // 主内容 跳转 二级页面 评论
 // https://sspai.com/api/v1/comment/user/article/hot/page/get?limit=20&offset=0&created_at=1682494561&article_id=79462&flag_model=1
-
-
+export const requestComment = function (data) {
+    return Axios.get("/comment/user/article/hot/page/get", {
+        params: data
+    })
+}
 
 // 主内容 跳转 二级页面 下层 推荐阅读
 // https://sspai.com/api/v1/article/relationship/page/get?limit=6&id=79462
+export const requestRecommend = function (data) {
+    return Axios.get("/article/relationship/page/get", {
+        params: data
+    })
+}
+
+// 首页轮播图 少数之作
+// https://sspai.com/api/v1/page/info/get?cname=pi-choice&type=1
+export const requestWorks = function (data) {
+    return Axios.get("/page/info/get", {
+        params: data
+    })
+}
+
+// 首页轮播图 最新力作
+// page/info/get?cname=pi-choice&type=1
+export const requestEffort = function (data) {
+    return Axios.get("/page/info/get?cname=pi-choice&type=1")
+}

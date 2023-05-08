@@ -9,19 +9,19 @@
     const scroll = ref([]);
     requestScroll().then(res => {
         scroll.value = res.data.data
+        console.log(res.data.data);
     })
     // 定义 四维图
     const fourImg = ref([])
     requestFourimg().then(res => {
         fourImg.value = res.data.data
-        // console.log(res.data.data);
     })
     // 定义 主内容数据
     const page = ref(0)
     const contents = ref([])
     requestContents().then(res => {
         contents.value = res.data.data
-        // console.log(res.data.data);
+        console.log(res.data.data);
     })
     // 控制tabber 当前是哪个分类,顺便修改数据
     const nums = ref(1)
@@ -30,7 +30,6 @@
         if (value == 1) {
             requestContents().then(res => {
                 contents.value = res.data.data
-                console.log(res.data.data);
             })
         } else if (value == 2) {
             requestHot({
@@ -172,32 +171,57 @@
     // 主内容(右侧 第一部分)
     const RightOne = ref([])
     requestRightOne().then(res => {
-        // console.log(res.data.data);
         RightOne.value = res.data.data
     })
     // 主内容(右侧 第二部分)
     const RightTwo = ref([])
     requestRightTwo().then(res => {
-        // console.log(res.data.data);
         RightTwo.value = res.data.data
     })
     // 主内容(右侧 第三部分)
     const RightThree = ref([])
     requestRightThree().then(res => {
-        console.log(res.data.data);
         RightThree.value = res.data.data
     })
     // 点击主内容 跳转 二级页面
     const router = useRouter()
     // 点击事件(主内容)
-    const route = () => {
-        console.log("1231");
-        router.push({
-            path: '/details',
-            query: {
-                id: '123'
+    const route = (id, name) => {
+        console.log(name);
+        if (name != '付费内容') {
+            router.push({
+                path: '/details',
+                query: {
+                    id: id
+                }
+            })
+        }
+    }
+    // 轮播图与四维点击事件
+    const imageFour = (url) => {
+        console.log(url.length);
+        if (url.length == 32) {
+            const stringlength = url.length
+            var newstring = url.substring(stringlength - 9, stringlength);
+            router.push({
+                path: '/works',
+                query: {
+                    id: newstring
+                }
+            })
+        }
+        if (url.length == 28) {
+            const stringlength = url.length
+            var newstring = url.substring(stringlength - 5, stringlength);
+            if (newstring.indexOf('/') == -1) {
+                router.push({
+                    path: '/details',
+                    query: {
+                        id: newstring
+                    }
+                })
             }
-        })
+        }
     }
 </script>
 
@@ -212,7 +236,8 @@
                 <div class="el-carousel">
                     <div class="el-carousel__container" style="height: 367.479px; position: relative;">
                         <el-carousel height="367px">
-                            <el-carousel-item v-for="(item,index) in scroll" :key="item.id">
+                            <el-carousel-item v-for="(item,index) in scroll" :key="item.id"
+                                @click="imageFour(item.url)">
                                 <el-image style="width: 100%; height: 100%"
                                     :src=" 'https://cdn.sspai.com/' + item.image + '?imageMogr2/auto-orient/quality/95/thumbnail/!2880x620r/gravity/Center/crop/2880x620/interlace/1'"
                                     fit="cover" />
@@ -225,7 +250,7 @@
             <div class="minor-banner-box">
                 <div class="minor-banner">
                     <ul>
-                        <li class="minor-item" v-for="item in fourImg" :key="item.id">
+                        <li class="minor-item" v-for="item in fourImg" :key="item.id" @click="imageFour(item.url)">
                             <a href="#">
                                 <img :src="'https://cdn.sspai.com/' + item.image + '?imageMogr2/auto-orient/quality/95/thumbnail/!528x288r/gravity/Center/crop/528x288/interlace/1'"
                                     alt="">
@@ -264,9 +289,10 @@
                         <div class="articleCard-box">
                             <!-- 循环 -->
                             <div v-for="item in contents" :key="item.id">
-                                <div class="articleCard" v-if="item.morning_paper_title.length == 0" @click="route">
+                                <div class="articleCard" v-if="item.morning_paper_title.length == 0"
+                                    @click="route(item.id,item.corner.name)">
                                     <!-- 普通 -->
-                                    <div class="advertisementCardBox">
+                                    <div class="advertisementCardBoxs">
                                         <!-- 左 -->
                                         <div class="img_box">
                                             <a href="#">
@@ -285,9 +311,8 @@
                                                     {{item.title}}
                                                 </div>
                                             </a>
-                                            <div class="txt text_ellipsis3">
-                                                如今 3DS 已经不是用「游戏机」这种简单词汇就能形容的物品，它承载了太多人的回忆。
-                                            </div>
+                                            <!--  -->
+                                            <div class="txt text_ellipsis3"></div>
                                             <div class="card_bottom pc_card">
                                                 <div class="left">
                                                     <div class="pic_box">
@@ -322,7 +347,8 @@
                                     </div>
                                 </div>
                                 <!-- 大块头 -->
-                                <div class="pai articleCard home pc" v-if="item.morning_paper_title.length">
+                                <div class="pai articleCard home pc" v-if="item.morning_paper_title.length"
+                                    @click="route(item.id)">
                                     <!-- 上 -->
                                     <div class="pai_title">
                                         <a href="#">
@@ -533,8 +559,6 @@
         background-color: #f4f4f4;
     }
 
-
-
     /* 主页内容 */
     .home-page {
         overflow: hidden;
@@ -702,7 +726,7 @@
         margin-bottom: 15px;
     }
 
-    .advertisementCardBox {
+    .advertisementCardBoxs {
         user-select: none;
         max-width: 800px;
         display: flex;
@@ -710,16 +734,16 @@
         width: 100%;
     }
 
-    .advertisementCardBox a {
+    .advertisementCardBoxs a {
         color: #292525;
     }
 
-    .advertisementCardBox:hover .img_box {
+    .advertisementCardBoxs:hover .img_box {
         cursor: pointer;
         width: 390px;
     }
 
-    .advertisementCardBox:hover .img_box::after {
+    .advertisementCardBoxs:hover .img_box::after {
         content: "";
         position: absolute;
         left: 0;
@@ -731,7 +755,7 @@
     }
 
     /* 左 */
-    .advertisementCardBox .img_box {
+    .advertisementCardBoxs .img_box {
         width: 50%;
         padding-top: 25%;
         overflow: hidden;
@@ -741,7 +765,7 @@
         background: linear-gradient(180deg, transparent, #000);
     }
 
-    .advertisementCardBox .card_img {
+    .advertisementCardBoxs .card_img {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -780,7 +804,7 @@
         margin: auto 0;
     }
 
-    .advertisementCardBox .title {
+    .advertisementCardBoxs .title {
         color: #292525;
         font-weight: 600;
         font-size: 20px;

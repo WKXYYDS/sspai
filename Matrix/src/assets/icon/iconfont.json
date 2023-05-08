@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "774533",
+      "name": "赞3",
+      "font_class": "zan3",
+      "unicode": "e6b5",
+      "unicode_decimal": 59061
+    },
+    {
+      "icon_id": "15053894",
+      "name": "点赞",
+      "font_class": "24px",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "26049137",
+      "name": "上下箭头",
+      "font_class": "shangxiajiantou",
+      "unicode": "e67f",
+      "unicode_decimal": 59007
+    },
+    {
       "icon_id": "2402025",
       "name": "投票",
       "font_class": "toupiao",
