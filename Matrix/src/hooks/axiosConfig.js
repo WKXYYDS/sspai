@@ -19,7 +19,6 @@ export default Axios
 // axios.defaults.timeout = 20000;
 // axios.defaults.headers = {
 //     'Access-Token': localStorage.getItem("Token") || '',
-
 // };
 // // axios.defaults.headers.common['Authorization'] = localStorage.getItem("token");
 // // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';

@@ -24,6 +24,13 @@ const router = createRouter({
       // 异步加载
       component: () => import('../view/WorksView.vue')
     },
+    // 首页 轮播图 系列
+    {
+      path: '/series',
+      name: 'series',
+      // 异步加载
+      component: () => import('../view/SeriesView.vue')
+    },
     {
       path: '/',
       redirect: "/home"

@@ -128,6 +128,21 @@ export const requestWorks = function (data) {
 
 // 首页轮播图 最新力作
 // page/info/get?cname=pi-choice&type=1
-export const requestEffort = function (data) {
+export const requestEffort = function () {
     return Axios.get("/page/info/get?cname=pi-choice&type=1")
+}
+
+// 首页轮播图 第三形态
+// series/info/get?id=298&view=second
+export const requestThree = function (data) {
+    return Axios.get("/series/info/get", {
+        params: data
+    })
+}
+// 首页轮播图 第三形态
+// series/article/search/page/get?series_id=298&limit=10&offset=0&weight=0&sort=desc&title=
+export const requestThrees = function (data) {
+    return Axios.get("/series/article/search/page/get", {
+        params: data
+    })
 }

@@ -1259,7 +1259,7 @@
         letter-spacing: .1em;
         transition: .1s;
         margin: 0;
-        -webkit-appearance: none;
+        appearance: none;
         white-space: nowrap;
         cursor: pointer;
         display: inline-block;
@@ -1577,7 +1577,7 @@
 
     .advertisementCardBox .img_box {
         transition: all .2s ease-out;
-        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
         background: linear-gradient(180deg, transparent, #000);
     }
 

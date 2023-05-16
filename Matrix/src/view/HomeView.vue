@@ -209,8 +209,7 @@
                     id: newstring
                 }
             })
-        }
-        if (url.length == 28) {
+        } else if (url.length == 28) {
             const stringlength = url.length
             var newstring = url.substring(stringlength - 5, stringlength);
             if (newstring.indexOf('/') == -1) {
@@ -220,11 +219,19 @@
                         id: newstring
                     }
                 })
+            } else {
+                const stringlength = url.length
+                var newstring = url.substring(stringlength - 3, stringlength);
+                router.push({
+                    path: '/series',
+                    query: {
+                        id: newstring
+                    }
+                })
             }
         }
     }
 </script>
-
 <template>
     <div class="Home-box">
         <!-- 首页导航栏 -->
